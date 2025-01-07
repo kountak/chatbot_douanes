@@ -2,7 +2,6 @@ langchain
 langchain-community
 llama_index.embeddings.langchain
 langchain_groq
-llama_index.llms.llama_cpp
 llama-index-llms-langchain
 llama_index.embeddings.huggingface
 chromadb
@@ -17,7 +16,6 @@ pypdf
 PyPDF2
 accelerate
 llama-index
-llama-cpp-python
 utils
 unstructured[md]
 spacy
