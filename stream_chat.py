@@ -56,7 +56,7 @@ st.markdown(
 )
 
 # Définir l'image de fond d'écran (remplacez 'background.jpg' par le chemin de votre image)
-set_background_image('/home/onyxia/work/fond.jpg')
+set_background_image('https://github.com/kountak/chatbot_douanes/blob/main/fond.png')
 
 # Initialisation de l'historique des messages
 if "messages" not in st.session_state:
