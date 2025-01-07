@@ -24,10 +24,6 @@ from langchain.chains import ConversationalRetrievalChain
 from groq import Groq
 from langchain_groq import ChatGroq
 from pathlib import Path
-from llama_index.llms.llama_cpp.llama_utils import (
-    messages_to_prompt,
-    completion_to_prompt,
-    )
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
 from llama_index.core.node_parser import SimpleNodeParser, SentenceWindowNodeParser
 from llama_index.core import Settings
