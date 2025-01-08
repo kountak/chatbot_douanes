@@ -117,7 +117,7 @@ if prompt := st.chat_input("Posez votre question ici"):
     # Réponse automatique pour les salutations
     salutations = ["Bonjour", "Coucou", "Bjr", "Cc", "Hello", "Hi",""]
     if prompt in salutations:
-        assistant_response = "Bonjour, je suis **Sinayo**, votre agent conversationnel spécialisé sur les questions douanières au Togo, en quoi puis-je vous aider ?"
+        assistant_response = "Bonjour, je suis Sinayo, votre agent conversationnel spécialisé sur les questions douanières au Togo, en quoi puis-je vous aider?"
         with st.chat_message("assistant"):
             display_response(assistant_response)
         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
