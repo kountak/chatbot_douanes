@@ -55,7 +55,7 @@ groq_api_key = "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"     # 
 # ************************************************************************************** 
 # ***************** CHARGEMENT DE LA BASE DE DONNEES (FICHIERS PDF) ********************
 # **************************************************************************************
-loader = PyPDFDirectoryLoader("/home/onyxia/work/bon")
+loader = PyPDFDirectoryLoader("https://github.com/kountak/chatbot_douanes/blob/main/")
 data = loader.load()
 
 pdf_texts = [doc.page_content for doc in data]
