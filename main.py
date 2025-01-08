@@ -8,6 +8,7 @@ import random, tempfile
 import numpy as np
 import pandas as pd
 import warnings
+import requests
 
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from llama_index.embeddings.langchain import LangchainEmbedding
