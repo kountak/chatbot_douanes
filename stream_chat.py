@@ -143,7 +143,7 @@ if prompt := st.chat_input("Posez votre question ici"):
                 unsafe_allow_html=True
             )
             with st.chat_message("assistant"):
-                display_response(assistant_response)
+                display_response(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
         except Exception as e:
             error_message = f"Désolé, une erreur s'est produite : {str(e)}. Veuillez réessayer plus tard."
