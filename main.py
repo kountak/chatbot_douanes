@@ -57,31 +57,43 @@ groq_api_key = "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"     # 
 # ************************************************************************************** 
 # ***************** CHARGEMENT DE LA BASE DE DONNEES (FICHIERS PDF) ********************
 # **************************************************************************************
-def load_pdfs_from_github(repo_url, branch, pdf_paths):
+def download_pdfs_from_github(repo_url, branch, pdf_paths, download_dir):
     """
-    Télécharge et charge les fichiers PDF depuis GitHub.
+    Télécharge les fichiers PDF depuis GitHub et les enregistre localement.
     
     :param repo_url: URL de base du dépôt GitHub.
     :param branch: Nom de la branche.
     :param pdf_paths: Liste des chemins des fichiers PDF dans le dépôt.
-    :return: Liste de documents PDF chargés.
+    :param download_dir: Répertoire local où enregistrer les PDF.
     """
-    documents = []
+    os.makedirs(download_dir, exist_ok=True)
     base_url = f"{repo_url}/raw/{branch}"
 
     for pdf_path in pdf_paths:
         file_url = f"{base_url}/{pdf_path}"
+        local_path = os.path.join(download_dir, os.path.basename(pdf_path))
         try:
             response = requests.get(file_url)
             response.raise_for_status()  # Vérifie si la requête a réussi
-            pdf_data = BytesIO(response.content)
-            loader = PyPDFLoader(pdf_data)
-            documents.extend(loader.load())
-            logger.info(f"Fichier PDF chargé avec succès : {pdf_path}")
+            with open(local_path, "wb") as pdf_file:
+                pdf_file.write(response.content)
+            print(f"Fichier téléchargé avec succès : {local_path}")
         except requests.exceptions.RequestException as e:
-            logger.error(f"Erreur lors du téléchargement de {file_url}: {e}")
+            print(f"Erreur lors du téléchargement de {file_url}: {e}")
+
+
+def load_pdfs_from_directory(directory):
+    """
+    Charge les fichiers PDF depuis un répertoire en utilisant PyPDFDirectoryLoader.
     
+    :param directory: Répertoire contenant les fichiers PDF.
+    :return: Liste de documents PDF chargés.
+    """
+    loader = PyPDFDirectoryLoader(directory)
+    documents = loader.load()
+    print(f"{len(documents)} fichiers PDF chargés depuis {directory}")
     return documents
+
 
 # Paramètres pour les fichiers sur GitHub
 repo_url = "https://github.com/kountak/chatbot_douanes"
@@ -91,8 +103,16 @@ pdf_paths = [
     # Ajoute ici les chemins relatifs des autres fichiers PDF
 ]
 
+# Répertoire temporaire pour télécharger les fichiers PDF
+download_dir = "/tmp/pdfs"
+
+# Étape 1 : Télécharger les fichiers PDF depuis GitHub
+download_pdfs_from_github(repo_url, branch, pdf_paths, download_dir)
+
+# Étape 2 : Charger les fichiers PDF depuis le répertoire
+data = load_pdfs_from_directory(download_dir)
+
 # Chargement des fichiers PDF
-data = load_pdfs_from_github(repo_url, branch, pdf_paths)
 # loader = PyPDFDirectoryLoader("https://github.com/kountak/chatbot_douanes/blob/main/")
 # data = loader.load()
 
