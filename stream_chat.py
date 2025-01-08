@@ -115,7 +115,7 @@ if prompt := st.chat_input("Posez votre question ici"):
     )
 
     # Réponse automatique pour les salutations
-    salutations = ["Bonjour", "Coucou", "Bjr", "Cc", "Hello", "Hi"]
+    salutations = ["Bonjour", "Coucou", "Bjr", "Cc", "Hello", "Hi",""]
     if prompt in salutations:
         assistant_response = "Bonjour, je suis **Sinayo**, votre agent conversationnel spécialisé sur les questions douanières au Togo, en quoi puis-je vous aider ?"
         with st.chat_message("assistant"):
@@ -133,6 +133,8 @@ if prompt := st.chat_input("Posez votre question ici"):
         try:
             chat_history = [(msg["role"], msg["content"]) for msg in st.session_state.messages]
             response = retrieve_response(prompt)
+            with st.chat_message("assistant"):
+                display_response(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.markdown(
                 f"""
@@ -142,9 +144,6 @@ if prompt := st.chat_input("Posez votre question ici"):
                 """,
                 unsafe_allow_html=True
             )
-            with st.chat_message("assistant"):
-                display_response(response)
-            st.session_state.messages.append({"role": "assistant", "content": response})
         except Exception as e:
             error_message = f"Désolé, une erreur s'est produite : {str(e)}. Veuillez réessayer plus tard."
             st.session_state.messages.append({"role": "assistant", "content": error_message})
