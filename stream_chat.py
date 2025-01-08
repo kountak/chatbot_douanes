@@ -1,4 +1,6 @@
 import streamlit as st
+import requests
+from PIL import Image
 from typing import List
 import base64
 import time
@@ -6,9 +8,13 @@ import time
 from main import retrieve_response
 
 # Fonction pour définir l'image de fond d'écran
-def set_background_image(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode()
+def set_background_image(image_url):
+    response = requests.get(image_url, stream=True)
+    if response.status_code == 200:
+        image = Image.open(response.raw)
+        st.image(image, use_column_width=True)
+    else:
+        st.error("Impossible de charger l'image. Vérifiez l'URL.")
     st.markdown(
         f"""
         <style>
@@ -56,7 +62,7 @@ st.markdown(
 )
 
 # Définir l'image de fond d'écran (remplacez 'background.jpg' par le chemin de votre image)
-set_background_image('https://github.com/kountak/chatbot_douanes/blob/main/fond.png')
+set_background_image('https://raw.githubusercontent.com/kountak/chatbot_douanes/main/fond.png')
 
 # Initialisation de l'historique des messages
 if "messages" not in st.session_state:
