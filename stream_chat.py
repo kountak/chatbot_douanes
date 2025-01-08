@@ -99,7 +99,7 @@ def display_response(response):
     for word in words:
         displayed_response += word + " "
         response_container.markdown(displayed_response, unsafe_allow_html=True)
-        time.sleep(0.1)
+        time.sleep(0.2)
 
 # Réaction à une nouvelle question
 if prompt := st.chat_input("Posez votre question ici"):
@@ -145,9 +145,6 @@ if prompt := st.chat_input("Posez votre question ici"):
                 """,
                 unsafe_allow_html=True
             )
-            with st.chat_message("assistant"):
-                display_response(response)
-            st.session_state.messages.append({"role": "assistant", "content": response})
         except Exception as e:
             error_message = f"Désolé, une erreur s'est produite : {str(e)}. Veuillez réessayer plus tard."
             st.session_state.messages.append({"role": "assistant", "content": error_message})
