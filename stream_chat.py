@@ -121,14 +121,6 @@ if prompt := st.chat_input("Posez votre question ici"):
         with st.chat_message("assistant"):
             display_response(assistant_response)
         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-        st.markdown(
-            f"""
-            <div class="message-container assistant-container">
-                <div class="message assistant-message">{assistant_response}</div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
     else:
         try:
             chat_history = [(msg["role"], msg["content"]) for msg in st.session_state.messages]
@@ -136,22 +128,8 @@ if prompt := st.chat_input("Posez votre question ici"):
             with st.chat_message("assistant"):
                 display_response(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
-            st.markdown(
-                f"""
-                <div class="message-container assistant-container">
-                    <div class="message assistant-message">{response}</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
         except Exception as e:
             error_message = f"Désolé, une erreur s'est produite : {str(e)}. Veuillez réessayer plus tard."
             st.session_state.messages.append({"role": "assistant", "content": error_message})
-            st.markdown(
-                f"""
-                <div class="message-container assistant-container">
-                    <div class="message assistant-message">{error_message}</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            with st.chat_message("assistant"):
+                display_response(error_message)
