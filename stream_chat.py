@@ -13,19 +13,24 @@ def set_background_image(image_url):
     if response.status_code == 200:
         # Encoder l'image en base64
         encoded_string = base64.b64encode(response.content).decode()
-        # image = Image.open(response.raw)
-        # st.image(image, use_column_width=True)
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{ 
+                background-image: url("data:image/jpeg;base64,{encoded_string}");
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True 
+        )
     else:
         st.error("Impossible de charger l'image. Vérifiez l'URL.")
     st.markdown(
         f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpeg;base64,{encoded_string}");
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-        }}
+        <style>        
         .message-container {{
             display: flex;
             flex-direction: row;
