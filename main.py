@@ -55,8 +55,44 @@ groq_api_key = "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"     # 
 # ************************************************************************************** 
 # ***************** CHARGEMENT DE LA BASE DE DONNEES (FICHIERS PDF) ********************
 # **************************************************************************************
-loader = PyPDFDirectoryLoader("https://github.com/kountak/chatbot_douanes/blob/main/")
-data = loader.load()
+def load_pdfs_from_github(repo_url, branch, pdf_paths):
+    """
+    Télécharge et charge les fichiers PDF depuis GitHub.
+    
+    :param repo_url: URL de base du dépôt GitHub.
+    :param branch: Nom de la branche.
+    :param pdf_paths: Liste des chemins des fichiers PDF dans le dépôt.
+    :return: Liste de documents PDF chargés.
+    """
+    documents = []
+    base_url = f"{repo_url}/raw/{branch}"
+
+    for pdf_path in pdf_paths:
+        file_url = f"{base_url}/{pdf_path}"
+        try:
+            response = requests.get(file_url)
+            response.raise_for_status()  # Vérifie si la requête a réussi
+            pdf_data = BytesIO(response.content)
+            loader = PyPDFLoader(pdf_data)
+            documents.extend(loader.load())
+            logger.info(f"Fichier PDF chargé avec succès : {pdf_path}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Erreur lors du téléchargement de {file_url}: {e}")
+    
+    return documents
+
+# Paramètres pour les fichiers sur GitHub
+repo_url = "https://github.com/kountak/chatbot_douanes"
+branch = "main"
+pdf_paths = [
+    "document_a_fournir_modele.pdf",
+    # Ajoute ici les chemins relatifs des autres fichiers PDF
+]
+
+# Chargement des fichiers PDF
+data = load_pdfs_from_github(repo_url, branch, pdf_paths)
+# loader = PyPDFDirectoryLoader("https://github.com/kountak/chatbot_douanes/blob/main/")
+# data = loader.load()
 
 pdf_texts = [doc.page_content for doc in data]
 combined_text = "\n".join(pdf_texts)
