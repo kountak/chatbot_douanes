@@ -233,7 +233,7 @@ stored_vectors = np.array([faiss_index.reconstruct(i) for i in range(faiss_index
 print("Premiers vecteurs stockés :")
 print(len(stored_vectors))
  #
-retriever = vectorstore.as_retriever(search_kwargs={'k': 2})
+retriever = vectorstore.as_retriever(search_kwargs={'k': 5})
 
 # ************************************************************************************** 
 # ********************** DEFINITION PERSONNALISEE DU PROMPT ****************************
