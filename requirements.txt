@@ -24,5 +24,4 @@ span-marker
 scikit-learn
 git+https://github.com/huggingface/transformers
 streamlit
-PIL
 requests
