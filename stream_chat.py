@@ -11,8 +11,10 @@ from main import retrieve_response
 def set_background_image(image_url):
     response = requests.get(image_url, stream=True)
     if response.status_code == 200:
-        image = Image.open(response.raw)
-        st.image(image, use_column_width=True)
+        # Encoder l'image en base64
+        encoded_string = base64.b64encode(response.content).decode()
+        # image = Image.open(response.raw)
+        # st.image(image, use_column_width=True)
     else:
         st.error("Impossible de charger l'image. Vérifiez l'URL.")
     st.markdown(
