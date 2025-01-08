@@ -34,6 +34,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from transformers import AutoTokenizer
 from llama_parse import LlamaParse
 from langchain.prompts import PromptTemplate
+from io import BytesIO
 
 
 warnings.filterwarnings('ignore')
