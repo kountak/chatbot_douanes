@@ -208,8 +208,8 @@ len(text_chunks)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")  # Embedding model
 
 # LLM model
-model_kwargs = {"top_p": 1}
-chat_model = ChatGroq(temperature=0.002,
+model_kwargs = {"top_p": 0.95}
+chat_model = ChatGroq(temperature=0.7,
                       model_name="mixtral-8x7b-32768",
                       model_kwargs=model_kwargs,
                       api_key=groq_api_key,)
