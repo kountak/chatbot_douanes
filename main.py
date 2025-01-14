@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 # *************************** INSTANCIATION DES API KEYS *******************************
 # **************************************************************************************
 login('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')          # Hugging Face API KEY
-groq_api_key = "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"     # Groq API KEY
+groq_api_key = "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"     # Groq API KEY
 
 
 
@@ -123,17 +123,24 @@ combined_text = "\n".join(pdf_texts)
 # ************************************************************************************** 
 # ************************* PARSING ET DECOUPAGE EN CHUNKS *****************************
 # **************************************************************************************
-instructions = """Le document fourni est un condensé d'informations sur les procédures douanières au Togo,
-        Ces informations contiennent le code des douanes national, les arrêtés, les notes de service.
-        Il contient également certaines formules de calcul et certaines tables
-        Réponds uniquement en français en étant le plus précis possible"""
+instructions = """
+            Les documents fournis sont des informations sur les douanes au Togo. Ils contiennent des tableaux.
+            Pour les tableaux, les informations contenues sur la première ligne correspond au nom de chaque variable.
+            Chaque ligne des tableaux correspond à une information
+            Les abréviations, acronymes et leurs définitions présents dans le document doivent être conservés tels quels, car ils sont spécifiques au contexte douanier togolais.
+            N'invente pas toi même des définitions aux sigles et acronymes.
+            Les codes des régimes douaniers sont spécifiques au Togo et sont composés de 4 chiffres.
+            S'il te plait extrait toutes les informations
+            N'ajoute aucune information qui ne soit pas contenue dans le document.
+            """
 parser = LlamaParse(
-    api_key="llx-sS8YkLW8jA3zWfi5fTFIrigcTzBuUBjIN5ntmdAfkAu0XngC",
+    api_key="llx-n7EXJpPGOpvO6IFm9oqZbZDxSALcxEd1XeiWLRQchE3L5sTL",
     result_type="markdown",
     verbose=True,
+    continuous_mode=True,
     parsing_instruction=instructions,
     max_timeout=10000,
-    language="fr",
+    language = "fr",
 )
 
 # Sauvegarder le contenu dans un fichier temporaire au format TXT
@@ -205,10 +212,10 @@ len(text_chunks)
 # ************************************************************************************** 
 # ***************** CHARGEMENT DES MODELES D'EMBEDDING ET DU LLM ***********************
 # **************************************************************************************
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")  # Embedding model
+embeddings = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-base")  # Embedding model
 
 # LLM model
-model_kwargs = {"top_p": 0.95}
+model_kwargs={"top_p":1}
 chat_model = ChatGroq(temperature=0.7,
                       model_name="mixtral-8x7b-32768",
                       model_kwargs=model_kwargs,
@@ -239,10 +246,23 @@ retriever = vectorstore.as_retriever(search_kwargs={'k': 5})
 # ********************** DEFINITION PERSONNALISEE DU PROMPT ****************************
 # **************************************************************************************
 
-custom_prompt_template = """Tu es spécialiste des questions douanières surtout celles relatives au Togo.
-    Utilise les informations suivantes pour répondre aux questions de l'utilisateur.
-    Si tu ne connais pas la réponse, réponds seulement que tu ne connais pas, n'essaie pas d'inventer une réponse.
-    Réponds uniquement et uniquement en français. Réponds uniquement sur la base des informations contenues dans le document fourni.
+custom_prompt_template = """
+    Vous êtes un expert douanier togolais, chargé de répondre à toute les questions sur la douane togolaise.
+    Vous devez utiliser uniquement les informations du contexte et de l'expert.
+    Utilise les informations du contexte pour répondre aux questions de l'utilisateur.
+    Toutes les informations dont tu as besoin pour répondre se trouvent dans le document.
+    Il ne faut pas confondre code additionnel, code du régime douanier et code de la taxe.
+    Si tu ne connais pas la réponse, réponds "Je ne suis pas en mesure de répondre, veuillez contacter le bureau de douane le plus proche", n'essaie pas d'inventer une réponse.
+    Réponds uniquement et uniquement en français.
+    Le contexte est récupéré d'une banque d'information et ne fait pas partie de la conversation avec l'utilisateur.
+    Les documents fournis sont des informations sur les douanes au Togo. Ils contiennent des tableaux.
+    Pour les tableaux, considérez chaque première ligne du tableau comme le nom de la colonne.
+    Chaque ligne des tableaux correspond à une information.
+    Les abréviations, acronymes et leurs définitions présents dans le document doivent être conservés tels quels, car ils sont spécifiques au contexte douanier togolais.
+    N'invente pas toi même des définitions aux sigles et acronymes.
+    Les codes des régimes douaniers sont spécifiques au Togo et sont composés de 4 chiffres.
+    N'ajoute aucune information qui ne soit pas contenue dans le document.
+    Rappelez vous bien le document fourni renferme les informations sur la douane togolaise et que vous etes un expert douanier togolais.
 
     Context: {context}
     Question: {question}
