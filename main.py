@@ -99,7 +99,7 @@ def load_pdfs_from_directory(directory):
 repo_url = "https://github.com/kountak/chatbot_douanes"
 branch = "main"
 pdf_paths = [
-    "document_a_fournir_modele.pdf",
+    "document_a_fournir_modele_2.pdf",
     # Ajoute ici les chemins relatifs des autres fichiers PDF
 ]
 
@@ -202,12 +202,8 @@ def chunk_data(parsed_data):
 
 # Exemple d'utilisation avec parsed_data
 parsed_data = parser.load_data(temp_file_path)
-chunks = chunk_data(parsed_data)
-print(f"Nombre total de chunks : {len(chunks)}")
-
 text_chunks = chunk_data(parsed_data)
-
-len(text_chunks)
+print(f"Nombre total de chunks : {len(text_chunks)}")
 
 # ************************************************************************************** 
 # ***************** CHARGEMENT DES MODELES D'EMBEDDING ET DU LLM ***********************
@@ -301,9 +297,7 @@ def retrieval_qa_chain(llm, prompt, retriever):
         chain_type="stuff",
         retriever=retriever,
         return_source_documents=True,
-        chain_type_kwargs={
-            'prompt': prompt
-        }
+        chain_type_kwargs=chain_type_kwargs,
     )
 
 def retrieve_response(query, chat_history=None):
