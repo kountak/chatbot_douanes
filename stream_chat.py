@@ -99,7 +99,6 @@ def display_response(response):
     for word in words:
         displayed_response += word + " "
         response_container.markdown(displayed_response, unsafe_allow_html=True)
-        st.write(displayed_response)
         time.sleep(0.05)
 
 # Réaction à une nouvelle question
