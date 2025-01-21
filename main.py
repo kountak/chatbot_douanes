@@ -2,13 +2,10 @@
 # *********************** IMPORTATION ET CHARGEMENT DES LIBRAIRIES *********************
 # **************************************************************************************
 
-import logging, subprocess, nest_asyncio, os, utils, sys, nltk, re, PyPDF2, torch
-import llama_index.llms
-import random, tempfile
+import logging, nest_asyncio, nltk, torch
+import tempfile
 import numpy as np
-import pandas as pd
 import warnings
-import requests
 
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from llama_index.embeddings.langchain import LangchainEmbedding
@@ -16,25 +13,18 @@ from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 from llama_index.core import Settings
 from langchain.chains import RetrievalQA
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 from langchain.vectorstores import FAISS
 from langchain.document_loaders import PyPDFDirectoryLoader
 from huggingface_hub import login, snapshot_download
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from groq import Groq
 from langchain_groq import ChatGroq
 from pathlib import Path
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
-from llama_index.core.node_parser import SimpleNodeParser, SentenceWindowNodeParser
-from llama_index.core import Settings
-from llama_index.core.callbacks import TokenCountingHandler, CallbackManager
-from llama_index.llms.openai import OpenAI
-from llama_index.embeddings.openai import OpenAIEmbedding
-from transformers import AutoTokenizer
+
 from llama_parse import LlamaParse
 from langchain.prompts import PromptTemplate
-from io import BytesIO
 
 
 warnings.filterwarnings('ignore')
@@ -134,7 +124,7 @@ instructions = """
             N'ajoute aucune information qui ne soit pas contenue dans le document.
             """
 parser = LlamaParse(
-    api_key="llx-n7EXJpPGOpvO6IFm9oqZbZDxSALcxEd1XeiWLRQchE3L5sTL",
+    api_key="llx-sS8YkLW8jA3zWfi5fTFIrigcTzBuUBjIN5ntmdAfkAu0XngC",
     result_type="markdown",
     verbose=True,
     continuous_mode=True,
@@ -257,6 +247,7 @@ custom_prompt_template = """
     Les abréviations, acronymes et leurs définitions présents dans le document doivent être conservés tels quels, car ils sont spécifiques au contexte douanier togolais.
     N'invente pas toi même des définitions aux sigles et acronymes.
     Les codes des régimes douaniers sont spécifiques au Togo et sont composés de 4 chiffres.
+    Le document contient la formule de calcul de certains droits et taxes.
     N'ajoute aucune information qui ne soit pas contenue dans le document.
     Rappelez vous bien le document fourni renferme les informations sur la douane togolaise et que vous etes un expert douanier togolais.
 
